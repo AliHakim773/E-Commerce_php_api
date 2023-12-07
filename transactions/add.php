@@ -69,14 +69,14 @@ try {
 
     if ($num_rows == 0) {
         $response['status'] = 'false';
-        $response['error'] = 'cart not found';
+        $response['error'] = 'no open carts found';
 
         die(json_encode($response));
     }
     $query->close();
 
     $query = $mysqli->prepare('insert into transactions(user_id, cart_id, date) values(?,?,?)');
-    $query->bind_param('isi', $user_id, $cart_id, $today);
+    $query->bind_param('iss', $user_id, $cart_id, $today);
     $query->execute();
 
     $query = $mysqli->prepare('update shopping_carts set status="completed" where cart_id=?');
