@@ -36,13 +36,6 @@ try {
     $decoded = JWT::decode($token, new Key($key, 'HS256'));
     $user_id = $decoded->user_id;
 
-    if ($decoded->user_type != 1) {
-        $response['status'] = 'false';
-        $response['error'] = 'permission failed';
-
-        die(json_encode($response));
-    }
-
     $query = $mysqli->prepare('select user_id from users where user_id=?');
     $query->bind_param('i', $user_id);
     $query->execute();
