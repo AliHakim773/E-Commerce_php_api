@@ -7,6 +7,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\Key;
 
+
 $headers = getallheaders();
 $response = [];
 if (!isset($headers['Authorization']) || empty($headers['Authorization'])) {
@@ -55,6 +56,8 @@ try {
         echo json_encode($response);
         exit();
     }
+
+    // echo json_encode(['id' => $seller_id, 'name' => $name, 'price' => $price]);
 
     $query = $mysqli->prepare('insert into products(seller_id, name, price) values(?,?,?)');
     $query->bind_param('isi', $seller_id, $name, $price);
