@@ -38,8 +38,8 @@ try {
     $query->execute();
 
     $array = $query->get_result();
-    while ($restaurant = $array->fetch_assoc()) {
-        $orders[] = $restaurant;
+    while ($order = $array->fetch_assoc()) {
+        $orders[] = $order;
     }
 
     $response['status'] = 'true';
