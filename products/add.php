@@ -18,7 +18,7 @@ if (!isset($headers['Authorization']) || empty($headers['Authorization'])) {
 }
 
 $authorization_header = $headers['Authorization'];
-$token = trim(str_replace("Bearer", '', $authorizationHeader));
+$token = trim(str_replace("Bearer", '', $authorization_header));
 
 if (!$token) {
     http_response_code(401);
@@ -35,15 +35,28 @@ try {
     $key = "ez4me";
     $decoded = JWT::decode($token, new Key($key, 'HS256'));
 
-    if ($decoded->usertype != 1) {
+    if ($decoded->user_type != 1) {
         $response['status'] = 'false';
         $response['error'] = 'permission failed';
         echo json_encode($response);
         exit();
     }
 
-    $query = $mysqli->prepare('insert into products(seller_id, name, price) 
-        values(?,?,?)');
+    $query = $mysqli->prepare('select user_type from users where user_id=?');
+    $query->bind_param('i', $seller_id);
+    $query->execute();
+
+    $query->bind_result($user_type);
+    $query->fetch();
+
+    if ($user_type != 1) {
+        $response['status'] = 'false';
+        $response['error'] = 'user is not a seller';
+        echo json_encode($response);
+        exit();
+    }
+
+    $query = $mysqli->prepare('insert into products(seller_id, name, price) values(?,?,?)');
     $query->bind_param('isi', $seller_id, $name, $price);
     $query->execute();
 
@@ -60,6 +73,6 @@ try {
 
     http_response_code(401);
     $response['status'] = 'false';
-    $response['error'] = 'Invalid token';
+    $response['error'] = 'error';
     echo json_encode($response);
 }
