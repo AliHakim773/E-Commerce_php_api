@@ -18,7 +18,7 @@ if (!isset($headers['Authorization']) || empty($headers['Authorization'])) {
 }
 
 $authorization_header = $headers['Authorization'];
-$token = trim(str_replace("Bearer", '', $authorizationHeader));
+$token = trim(str_replace("Bearer", '', $authorization_header));
 
 if (!$token) {
     http_response_code(401);
