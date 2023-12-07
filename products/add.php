@@ -28,13 +28,13 @@ if (!$token) {
     exit();
 }
 
-$seller_id = $_POST['seller_id'];
 $name = $_POST['name'];
 $price = $_POST['price'];
 
 try {
     $key = "ez4me";
     $decoded = JWT::decode($token, new Key($key, 'HS256'));
+    $seller_id = $decoded->user_id;
 
     if ($decoded->user_type != 1) {
         $response['status'] = 'false';
