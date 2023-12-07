@@ -36,6 +36,34 @@ try {
     $key = "ez4me";
     $decoded = JWT::decode($token, new Key($key, 'HS256'));
 
+    $query = $mysqli->prepare('select product_id from products where product_id=?');
+    $query->bind_param('i', $product_id);
+    $query->execute();
+
+    $query->store_result();
+    $num_rows = $query->num_rows;
+
+    if ($num_rows == 0) {
+        $response["status"] = "false";
+        $response["msg"] = "product doesnt exist";
+        echo json_encode($response);
+        exit();
+    }
+
+    $query = $mysqli->prepare('select user_id from users where user_id=?');
+    $query->bind_param('i', $user_id);
+    $query->execute();
+
+    $query->store_result();
+    $num_rows = $query->num_rows;
+
+    if ($num_rows == 0) {
+        $response["status"] = "false";
+        $response["msg"] = "user doesnt exist";
+        echo json_encode($response);
+        exit();
+    }
+
     $query = $mysqli->prepare("select cart_id from shopping_carts where user_id=? and status='pending'");
     $query->bind_param('i', $user_id);
     $query->execute();
