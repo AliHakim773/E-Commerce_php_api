@@ -72,6 +72,7 @@ try {
         exit();
     }
 
+    $query->close();
     $query = $mysqli->prepare('update products 
     set seller_id=?, name=?, price=?
     where product_id=?');
@@ -79,7 +80,7 @@ try {
     $query->execute();
 
     $response["status"] = "true";
-    $response["msg"] = "product added successfuly";
+    $response["msg"] = "product edited successfuly";
     echo json_encode($response);
 } catch (ExpiredException $e) {
 
@@ -91,6 +92,6 @@ try {
 
     http_response_code(401);
     $response['status'] = 'false';
-    $response['error'] = 'error';
+    $response['error'] = $e->getMessage();
     echo json_encode($response);
 }
