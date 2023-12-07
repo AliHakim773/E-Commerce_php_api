@@ -11,3 +11,5 @@ if ($mysqli->connect_error) {
     die("" . $mysqli->connect_error);
     exit();
 }
+
+header('Access-Control-Allow-Origin:*');
