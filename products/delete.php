@@ -13,8 +13,8 @@ if (!isset($headers['Authorization']) || empty($headers['Authorization'])) {
     http_response_code(401);
     $response['status'] = 'false';
     $response['error'] = 'Unauthorized user';
-    echo json_encode($response);
-    exit();
+
+    die(json_encode($response));
 }
 
 $authorization_header = $headers['Authorization'];
@@ -24,7 +24,8 @@ if (!$token) {
     http_response_code(401);
     $response['status'] = 'false';
     $response['error'] = 'Unauthorized user';
-    exit();
+
+    die(json_encode($response));
 }
 
 $product_id = $_GET['product_id'];
@@ -37,8 +38,8 @@ try {
     if ($decoded->user_type != 1) {
         $response['status'] = 'false';
         $response['error'] = 'permission failed';
-        echo json_encode($response);
-        exit();
+
+        die(json_encode($response));
     }
 
     $query = $mysqli->prepare('select product_id from products where product_id=?');
@@ -50,9 +51,9 @@ try {
 
     if ($num_rows == 0) {
         $response["status"] = "false";
-        $response["msg"] = "product doesnt exist";
-        echo json_encode($response);
-        exit();
+        $response["error"] = "product doesnt exist";
+
+        die(json_encode($response));
     }
 
     $query = $mysqli->prepare('select product_id from products where product_id=? and seller_id=?');
@@ -64,9 +65,9 @@ try {
 
     if ($num_rows == 0) {
         $response["status"] = "false";
-        $response["msg"] = "product doesnt belong to the seller";
-        echo json_encode($response);
-        exit();
+        $response["error"] = "product doesnt belong to the seller";
+
+        die(json_encode($response));
     }
 
     $query = $mysqli->prepare('delete from products
@@ -88,6 +89,6 @@ try {
 
     http_response_code(401);
     $response['status'] = 'false';
-    $response['error'] = 'Invalid token';
+    $response['error'] = $e->getMessage();
     echo json_encode($response);
 }

@@ -14,8 +14,8 @@ if (!isset($headers['Authorization']) || empty($headers['Authorization'])) {
     http_response_code(401);
     $response['status'] = 'false';
     $response['error'] = 'Unauthorized user';
-    echo json_encode($response);
-    exit();
+
+    die(json_encode($response));
 }
 
 $authorization_header = $headers['Authorization'];
@@ -25,7 +25,8 @@ if (!$token) {
     http_response_code(401);
     $response['status'] = 'false';
     $response['error'] = 'Unauthorized user';
-    exit();
+
+    die(json_encode($response));
 }
 
 $name = $_POST['name'];
@@ -39,8 +40,8 @@ try {
     if ($decoded->user_type != 1) {
         $response['status'] = 'false';
         $response['error'] = 'permission failed';
-        echo json_encode($response);
-        exit();
+
+        die(json_encode($response));
     }
 
     $query = $mysqli->prepare('select user_type from users where user_id=?');
@@ -53,8 +54,8 @@ try {
     if ($user_type != 1) {
         $response['status'] = 'false';
         $response['error'] = 'user is not a seller';
-        echo json_encode($response);
-        exit();
+
+        die(json_encode($response));
     }
     $query->close();
 

@@ -13,8 +13,8 @@ if (!isset($headers['Authorization']) || empty($headers['Authorization'])) {
     http_response_code(401);
     $response['status'] = 'false';
     $response['error'] = 'Unauthorized user';
-    echo json_encode($response);
-    exit();
+
+    die(json_encode($response));
 }
 
 $authorization_header = $headers['Authorization'];
@@ -24,7 +24,8 @@ if (!$token) {
     http_response_code(401);
     $response['status'] = 'false';
     $response['error'] = 'Unauthorized user';
-    exit();
+
+    die(json_encode($response));
 }
 
 $product_id = $_GET['product_id'];
@@ -44,8 +45,8 @@ try {
     if ($product == null) {
         $response['status'] = 'false';
         $response['error'] = 'products not found';
-        echo json_encode($response);
-        exit();
+
+        die(json_encode($response));
     };
 
     $response['status'] = 'true';
@@ -53,13 +54,15 @@ try {
 
     echo json_encode($response);
 } catch (ExpiredException $e) {
+
     http_response_code(401);
     $response['status'] = 'false';
     $response['error'] = 'token expired';
     echo json_encode($response);
 } catch (Exception $e) {
+
     http_response_code(401);
     $response['status'] = 'false';
-    $response['error'] = 'Invalid token';
+    $response['error'] = $e->getMessage();
     echo json_encode($response);
 }

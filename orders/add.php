@@ -14,8 +14,8 @@ if (!isset($headers['Authorization']) || empty($headers['Authorization'])) {
     http_response_code(401);
     $response['status'] = 'false';
     $response['error'] = 'Unauthorized user';
-    echo json_encode($response);
-    exit();
+
+    die(json_encode($response));
 }
 
 $authorization_header = $headers['Authorization'];
@@ -25,7 +25,7 @@ if (!$token) {
     http_response_code(401);
     $response['status'] = 'false';
     $response['error'] = 'Unauthorized user';
-    exit();
+    die(json_encode($response));
 }
 
 $product_id = $_POST['product_id'];
@@ -45,9 +45,9 @@ try {
 
     if ($num_rows == 0) {
         $response["status"] = "false";
-        $response["msg"] = "product doesnt exist";
-        echo json_encode($response);
-        exit();
+        $response["error"] = "product doesnt exist";
+
+        die(json_encode($response));
     }
 
     $query = $mysqli->prepare('select user_id from users where user_id=?');
@@ -59,9 +59,9 @@ try {
 
     if ($num_rows == 0) {
         $response["status"] = "false";
-        $response["msg"] = "user doesnt exist";
-        echo json_encode($response);
-        exit();
+        $response["error"] = "user doesnt exist";
+
+        die(json_encode($response));
     }
 
     $query = $mysqli->prepare("select cart_id from shopping_carts where user_id=? and status='pending'");

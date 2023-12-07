@@ -19,10 +19,9 @@ try {
 
     if ($num_rows == 0) {
         $response['status'] = 'false';
-        $response['msg'] = 'user not found';
+        $response['error'] = 'user not found';
 
-        echo json_encode($response);
-        exit();
+        die(json_encode($response));
     }
 
     $query->bind_result($id, $name, $hashed_password, $user_type);
@@ -45,7 +44,7 @@ try {
     }
 } catch (Exception $e) {
     $response["status"] = "false";
-    $response["msg"] = $e->getMessage();
+    $response["error"] = $e->getMessage();
 
     echo json_encode($response);
 }

@@ -13,8 +13,8 @@ if (!isset($headers['Authorization']) || empty($headers['Authorization'])) {
     http_response_code(401);
     $response['status'] = 'false';
     $response['error'] = 'Unauthorized user';
-    echo json_encode($response);
-    exit();
+
+    die(json_encode($response));
 }
 
 $authorization_header = $headers['Authorization'];
@@ -24,7 +24,8 @@ if (!$token) {
     http_response_code(401);
     $response['status'] = 'false';
     $response['error'] = 'Unauthorized user';
-    exit();
+
+    die(json_encode($response));
 }
 
 $cart_id = $_GET['cart_id'];
@@ -52,8 +53,9 @@ try {
     $response['error'] = 'token expired';
     echo json_encode($response);
 } catch (Exception $e) {
+
     http_response_code(401);
     $response['status'] = 'false';
-    $response['error'] = 'Invalid token';
+    $response['error'] = $e->getMessage();
     echo json_encode($response);
 }

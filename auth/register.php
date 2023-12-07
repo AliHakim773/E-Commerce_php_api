@@ -19,10 +19,9 @@ try {
 
     if ($num_rows != 0) {
         $response["status"] = "false";
-        $response["msg"] = "username already exist";
+        $response["error"] = "username already exist";
 
-        echo json_encode($response);
-        exit();
+        die(json_encode($response));
     }
 
     $query = $mysqli->prepare('insert into users(username, password, user_type) 
@@ -36,7 +35,7 @@ try {
     echo json_encode($response);
 } catch (Exception $e) {
     $response["status"] = "false";
-    $response["msg"] = "error";
+    $response["error"] = $e->getMessage();
 
     echo json_encode($response);
 }

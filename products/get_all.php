@@ -13,8 +13,8 @@ if (!isset($headers['Authorization']) || empty($headers['Authorization'])) {
     http_response_code(401);
     $response['status'] = 'false';
     $response['error'] = 'Unauthorized user';
-    echo json_encode($response);
-    exit();
+
+    die(json_encode($response));
 }
 
 $authorization_header = $headers['Authorization'];
@@ -24,29 +24,36 @@ if (!$token) {
     http_response_code(401);
     $response['status'] = 'false';
     $response['error'] = 'Unauthorized user';
-    exit();
+
+    die(json_encode($response));
 }
 
 try {
     $key = "ez4me";
     $decoded = JWT::decode($token, new Key($key, 'HS256'));
+
     $query = $mysqli->prepare('select p.* from products p
         join users u on u.user_id=p.seller_id');
     $query->execute();
+
     $array = $query->get_result();
-    while ($restaurant = $array->fetch_assoc()) {
-        $response[] = $restaurant;
+    while ($product = $array->fetch_assoc()) {
+        $products[] = $product;
     }
+    $response['status'] = 'true';
+    $response['data'] = $products;
 
     echo json_encode($response);
 } catch (ExpiredException $e) {
+
     http_response_code(401);
     $response['status'] = 'false';
     $response['error'] = 'token expired';
     echo json_encode($response);
 } catch (Exception $e) {
+
     http_response_code(401);
     $response['status'] = 'false';
-    $response['error'] = 'Invalid token';
+    $response['error'] = $e->getMessage();
     echo json_encode($response);
 }
