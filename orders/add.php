@@ -28,13 +28,13 @@ if (!$token) {
     exit();
 }
 
-$user_id = $_POST['user_id'];
 $product_id = $_POST['product_id'];
 $amount = $_POST['amount'];
 
 try {
     $key = "ez4me";
     $decoded = JWT::decode($token, new Key($key, 'HS256'));
+    $user_id = $decoded->user_id;
 
     $query = $mysqli->prepare('select product_id from products where product_id=?');
     $query->bind_param('i', $product_id);
