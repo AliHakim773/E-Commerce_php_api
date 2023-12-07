@@ -45,6 +45,7 @@ try {
         $response['status'] = 'false';
         $response['error'] = 'products not found';
         echo json_encode($response);
+        exit();
     };
 
     $response['status'] = 'true';
