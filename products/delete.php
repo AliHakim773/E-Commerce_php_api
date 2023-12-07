@@ -32,6 +32,7 @@ $product_id = $_GET['product_id'];
 try {
     $key = "ez4me";
     $decoded = JWT::decode($token, new Key($key, 'HS256'));
+    $seller_id = $decoded->user_id;
 
     if ($decoded->user_type != 1) {
         $response['status'] = 'false';
@@ -50,6 +51,20 @@ try {
     if ($num_rows == 0) {
         $response["status"] = "false";
         $response["msg"] = "product doesnt exist";
+        echo json_encode($response);
+        exit();
+    }
+
+    $query = $mysqli->prepare('select product_id from products where product_id=? and seller_id=?');
+    $query->bind_param('ii', $product_id, $seller_id);
+    $query->execute();
+
+    $query->store_result();
+    $num_rows = $query->num_rows();
+
+    if ($num_rows == 0) {
+        $response["status"] = "false";
+        $response["msg"] = "product doesnt belong to the seller";
         echo json_encode($response);
         exit();
     }
