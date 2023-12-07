@@ -56,8 +56,7 @@ try {
         echo json_encode($response);
         exit();
     }
-
-    // echo json_encode(['id' => $seller_id, 'name' => $name, 'price' => $price]);
+    $query->close();
 
     $query = $mysqli->prepare('insert into products(seller_id, name, price) values(?,?,?)');
     $query->bind_param('isi', $seller_id, $name, $price);
@@ -76,6 +75,6 @@ try {
 
     http_response_code(401);
     $response['status'] = 'false';
-    $response['error'] = 'error';
+    $response['error'] = $e->getMessage();
     echo json_encode($response);
 }
