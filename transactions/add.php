@@ -28,12 +28,12 @@ if (!$token) {
     exit();
 }
 
-$user_id = $_POST['user_id'];
 $today = date('Y-m-d');
 
 try {
     $key = "ez4me";
     $decoded = JWT::decode($token, new Key($key, 'HS256'));
+    $user_id = $decoded->user_id;
 
     if ($decoded->user_type != 1) {
         $response['status'] = 'false';
